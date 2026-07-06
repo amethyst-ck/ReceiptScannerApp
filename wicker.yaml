@@ -99,6 +99,7 @@ content:
       - Template:User receipts row income
       - Template:User receipts/styles.css
       - MediaWiki:Pf formedit edittitle
+      - MediaWiki:Common.css
   postInstall:
     # Cargo tables aren't created until the templates are reparsed under
     # cargoRecreateData. postInstall stays dumb — it just invokes the
