@@ -13,7 +13,7 @@
 	color: var( --color-base, #202122 );
 }
 
-.select2-container--default .select2-selection__choice {
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
 	background-color: var( --background-color-interactive, #eaecf0 );
 	border-color: var( --border-color-base, #a2a9b1 );
 	color: var( --color-base, #202122 );
