@@ -1,0 +1,94 @@
+This page defines the '''expense category vocabulary''' as an
+indented bullet list. The ReceiptScanner extension parses it on save,
+flattens it into full paths (<code>Travel/Meals</code>,
+<code>Online Services/Software</code>, …), and uses it to autocomplete
+the <code>expense_category</code> field on [[Form:Expense]].
+
+Income has its own vocabulary at [[Project:Income categories]].
+
+Edit this list with normal wiki editing to change the taxonomy. Existing
+expenses keep whatever path they were saved with; see [[Help:Receipts]]
+for how drift is handled.
+
+'''Reserved characters in labels:''' <code>/</code> separates parent
+from child in the rendered path, and <code>;</code> separates the
+options when this list is fed to the form combobox. Don't use either
+inside a label. Commas are fine ("Hotel, Lodging, and Accommodation"
+stays one option). Where you'd be tempted to write <code>A/B</code> in
+a single label, write "A, B, and …" instead, or split into a real
+parent → child relationship.
+
+This starter tree is derived from the FreshBooks default expense
+categories, with two adjustments for a SaaS-era small business:
+"Online Services" (hosting + SaaS software) and "Subscriptions, Dues, and Memberships"
+are lifted out of FreshBooks' catch-all "Other Expenses" lump to
+top level so they're easy to discover via autocomplete. Replace the
+tree with whatever fits your accounting.
+
+* Advertising
+* Bank and Merchant Fees
+* Business Insurance
+* Car and Truck Expenses
+** Gas
+** Mileage
+** Repairs
+** Vehicle Insurance
+** Vehicle Licensing
+* Commissions
+* Contractors
+* Cost of Goods Sold
+** Cost of Billed Expenses
+** Cost of Shipping and Handling
+* Depreciation
+* Education and Training
+** Books and Reference Materials
+** Conferences
+** Courses
+* Employee Benefits
+** Accident Insurance
+** Health Insurance
+** Life Insurance
+* Interest
+** Mortgage
+** Other
+* Meals and Entertainment
+** Entertainment
+** Restaurants and Dining
+* Office Expenses
+** Hardware
+** Office Supplies
+** Packaging
+** Postage
+** Printing
+** Shipping and Couriers
+** Software
+** Stationery
+* Online Services
+** Hosting
+** Software
+** Other
+* Professional Services
+** Accounting
+** Consulting
+** Legal
+* Rent or Lease
+** Equipment
+** Machinery
+** Office Space
+** Vehicles
+* Repairs and Maintenance
+* Subscriptions, Dues, and Memberships
+* Supplies
+* Taxes and Licenses
+* Travel
+** Airfare
+** Hotel, Lodging, and Accommodation
+** Meals
+** Mileage
+** Taxi and Parking
+* Utilities
+** Gas and Electrical
+** Internet
+** Phone
+* Wages
+* Other

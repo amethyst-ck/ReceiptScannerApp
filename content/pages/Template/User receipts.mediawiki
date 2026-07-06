@@ -1,0 +1,61 @@
+<noinclude>
+Per-user expense / income summary, driven by Cargo queries against the
+<code>Expenses</code> and <code>Income</code> tables. Pass the username
+as the first parameter (or default to the current page name, so adding
+<code><nowiki>{{User receipts}}</nowiki></code> to a User: page works
+without an argument).
+
+Usage on a user page:
+<pre>{{User receipts}}</pre>
+
+Usage anywhere:
+<pre>{{User receipts|UserName}}</pre>
+
+This template is intended to be placed on a User: page; if you install
+[https://www.mediawiki.org/wiki/Extension:CreateUserPage CreateUserPage]
+you can have it auto-added when a user is registered. See
+[[Help:Receipts]].
+
+When the query has zero matches, Cargo's <code>default=</code> kicks in
+with a short prose note (rendered instead of the table — Cargo skips
+the inline <code>intro=</code> / <code>outro=</code> wrappers when
+there are no rows). When there are results, the inline intro / outro
+plus the rows are all parsed together as a single HTML table — note
+the table tags are inline, not sub-templates, because Cargo's
+<code>format=template</code> only honors the literal <code>intro=</code>
+and <code>outro=</code> params (not <code>intro template=</code>).
+
+[[Category:Receipt templates]]
+</noinclude><includeonly><templatestyles src="Template:User receipts/styles.css" />
+=== Expenses ===
+{{#cargo_query:tables=Expenses
+|fields=_pageName=page,date,payee,total,currency,category
+|where=assignee="{{#if:{{{1|}}}|{{{1}}}|{{ROOTPAGENAME}}}}"
+|order by=date DESC
+|limit=20
+|format=template
+|template=User receipts row expense
+|intro=<table class="wikitable sortable rs-ledger-table" style="width:100%"><tr><th>Date</th><th>Payee</th><th style="text-align:right">Total</th><th>Category</th><th class="unsortable" style="width:3em;text-align:center">Link</th></tr>
+|outro=</table>
+|named args=yes
+|default=''No expenses for this user.''
+}}
+
+[{{fullurl:Special:Ledger|kind=expense&range=all&assignee={{urlencode:{{#if:{{{1|}}}|{{{1}}}|{{ROOTPAGENAME}}}}}}}} View all expenses in the ledger →]
+
+=== Income ===
+{{#cargo_query:tables=Income
+|fields=_pageName=page,date,payer,total,currency,category
+|where=assignee="{{#if:{{{1|}}}|{{{1}}}|{{ROOTPAGENAME}}}}"
+|order by=date DESC
+|limit=20
+|format=template
+|template=User receipts row income
+|intro=<table class="wikitable sortable rs-ledger-table" style="width:100%"><tr><th>Date</th><th>Payer</th><th style="text-align:right">Total</th><th>Category</th><th class="unsortable" style="width:3em;text-align:center">Link</th></tr>
+|outro=</table>
+|named args=yes
+|default=''No income for this user.''
+}}
+
+[{{fullurl:Special:Ledger|kind=income&range=all&assignee={{urlencode:{{#if:{{{1|}}}|{{{1}}}|{{ROOTPAGENAME}}}}}}}} View all income in the ledger →]
+</includeonly>

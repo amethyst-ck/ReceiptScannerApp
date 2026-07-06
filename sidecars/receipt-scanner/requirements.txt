@@ -1,0 +1,8 @@
+PyMuPDF~=1.26
+dateparser~=1.2
+invoice2data~=0.4
+Flask~=3.1
+gunicorn~=23.0
+pytesseract~=0.3
+Pillow~=11.3
+pillow-heif~=1.1

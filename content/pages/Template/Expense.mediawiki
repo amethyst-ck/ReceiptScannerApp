@@ -1,0 +1,67 @@
+<noinclude>
+{{#cargo_declare:_table=Expenses
+|file=File
+|supplemental_files=List (,) of File
+|date=Date
+|payee=String
+|total=Number
+|subtotal=Number
+|tax=Number
+|fees=Number
+|currency=String
+|exchange_rate=Number
+|total_system=Number
+|payment_method=String
+|assignee=String
+|category=String
+|notes=Text
+|queue_id=Integer
+}}
+This template stores an expense record in the <code>Expenses</code> [[Special:CargoTables/Expenses|Cargo table]]. Pages are normally created and edited via [[Form:Expense]] rather than by hand. See [[Help:Receipts]].
+
+Each expense has 0 or 1 <code>file</code> (the receipt the parser extracted these fields from) and 0+ <code>supplemental_files</code> (unparsed supporting documents — contracts, warranties, statements). A blank <code>file</code> means a manual entry.
+
+The <code>expense_category</code> parameter (stored in the <code>category</code> Cargo column) holds a full hierarchical path (e.g. <code>Travel/Meals</code>); the vocabulary lives at [[Project:Expense categories]]. <code>assignee</code> blank means company-wide.
+[[Category:Receipt templates]]
+</noinclude><includeonly><templatestyles src="Template:Receipt entry/styles.css" />{{#default_form:Expense}}{{#cargo_store:_table=Expenses
+|file={{{file|}}}
+|supplemental_files={{{supplemental_files|}}}
+|date={{{date|}}}
+|payee={{{payee|}}}
+|total={{{total|}}}
+|subtotal={{{subtotal|}}}
+|tax={{{tax|}}}
+|fees={{{fees|}}}
+|currency={{{currency|{{#receiptscanner_system_currency:}}}}}
+|exchange_rate={{{exchange_rate|1}}}
+|total_system={{{total_system|{{{total|}}}}}}
+|payment_method={{{payment_method|}}}
+|assignee={{{assignee|}}}
+|category={{{expense_category|}}}
+|notes={{{notes|}}}
+|queue_id={{{queue_id|}}}
+}}{{DISPLAYTITLE:{{{date|}}} {{#receiptscanner_truncate:{{{payee|}}}|30}}}}<div class="rs-entry">
+<div class="rs-entry-receipt">{{#if:{{{file|}}}|[{{#receiptscanner_file_url:{{{file}}}}} [[File:{{{file}}}{{!}}frameless{{!}}450px{{!}}link={{!}}alt={{{file}}}]]]|<div class="rs-no-receipt">''{{int:receiptscanner-template-no-receipt}}''</div>}}</div>
+<div class="rs-entry-fields">
+<div class="rs-entry-card">
+<div class="rs-entry-header">
+<div class="rs-entry-party-block"><div class="rs-entry-label">{{int:receiptscanner-template-label-payee}}</div><div class="rs-entry-party-name">{{#if:{{{payee|}}}|[{{fullurl:Special:Ledger|kind=expense&range=all&party={{urlencode:{{{payee}}}}}}} {{{payee}}}]|—}}</div></div>
+<div class="rs-entry-total">{{#receiptscanner_format_amount:{{{total|0}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}{{#ifeq:{{{currency|{{#receiptscanner_system_currency:}}}}}|{{#receiptscanner_system_currency:}}||<div class="rs-entry-total-converted">≈ {{#receiptscanner_format_amount:{{{total_system|{{{total|}}}}}}|{{#receiptscanner_system_currency:}}}}</div>}}</div>
+</div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-date}}</span><span class="rs-entry-value">{{#if:{{{date|}}}|[{{fullurl:Special:Ledger|kind=expense&range=custom&from={{urlencode:{{{date}}}}}&to={{urlencode:{{{date}}}}}}} {{{date}}}]|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-subtotal}}</span><span class="rs-entry-value">{{#if:{{{subtotal|}}}|{{#receiptscanner_format_amount:{{{subtotal}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-tax}}</span><span class="rs-entry-value">{{#if:{{{tax|}}}|{{#receiptscanner_format_amount:{{{tax}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-fees}}</span><span class="rs-entry-value">{{#if:{{{fees|}}}|{{#receiptscanner_format_amount:{{{fees}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-payment-method}}</span><span class="rs-entry-value">{{#if:{{{payment_method|}}}|{{{payment_method}}}|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-category-expense}}</span><span class="rs-entry-value">{{#if:{{{expense_category|}}}|[{{fullurl:Special:Ledger|kind=expense&range=all&category={{urlencode:{{{expense_category}}}}}}} {{{expense_category}}}]|—}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-assignee}}</span><span class="rs-entry-value">{{#if:{{{assignee|}}}|[{{fullurl:Special:Ledger|kind=expense&range=all&assignee={{urlencode:{{{assignee}}}}}}} {{{assignee}}}]|<span class="rs-entry-pill">{{int:receiptscanner-template-company-wide}}</span>}}</span></div>
+<div class="rs-entry-row"><span class="rs-entry-label">{{int:receiptscanner-template-label-notes}}</span><span class="rs-entry-value">{{#if:{{{notes|}}}|{{{notes}}}|—}}</span></div>
+</div>
+</div>
+{{#if:{{{supplemental_files|}}}|<div class="rs-entry-supplemental">
+'''{{int:receiptscanner-template-supporting-documents}}'''
+<div class="rs-entry-supplemental-strip">{{#arraymap:{{{supplemental_files|}}}|,|@F@|[[File:@F@{{!}}thumb{{!}}120px{{!}}link={{#receiptscanner_file_url:@F@}}{{!}}@F@]]| }}</div>
+</div>}}
+</div>
+[[Category:Expenses]]
+</includeonly>

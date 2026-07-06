@@ -1,0 +1,156 @@
+/* Layout for the rendered Expense / Income page. Receipt thumb sits
+ * beside the field card on wide viewports, above it on narrow ones.
+ * Supporting documents render as a thumbnail row below. Loaded by
+ * Template:Expense and Template:Income via <templatestyles src=…/>.
+ *
+ * Night mode: the card intentionally stays paper-white (background AND
+ * text colors are hardcoded as a pair) so it matches the inherently
+ * white receipt document beside it. Everything outside the card uses
+ * Codex tokens and follows the skin theme. */
+
+.rs-entry {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5em;
+	align-items: flex-start;
+	margin-top: .5em;
+}
+
+.rs-entry-receipt {
+	flex: 0 0 auto;
+	order: 2;
+	max-width: 480px;
+	/* The frameless file markup is inline spans around a block <img>;
+	   their text strut would push the image a few px below the card's
+	   top edge. Zeroing line-height aligns both columns' tops. */
+	line-height: 0;
+}
+
+/* Border on the actual rendered thumb (MediaWiki emits a
+   .mw-file-element <img> inside <span typeof="mw:File/Frameless">). */
+.rs-entry-receipt .mw-file-element {
+	border: 1px solid #c8ccd1;
+	border-radius: 4px;
+	background: #fff;
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+.rs-entry-fields {
+	flex: 1 1 320px;
+	order: 1;
+	min-width: 280px;
+	max-width: 440px;
+}
+
+.rs-no-receipt {
+	padding: 1em;
+	border: 1px dashed var( --border-color-base, #c8ccd1 );
+	color: var( --color-subtle, #72777d );
+	text-align: center;
+	line-height: 1.6;
+}
+
+/* The card itself: white background, soft shadow, rounded. */
+.rs-entry-card {
+	background: #fff;
+	border: 1px solid #eaecf0;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.06 ),
+		0 6px 14px rgba( 0, 0, 0, 0.05 );
+	overflow: hidden;
+	color: #202122;
+}
+
+/* Hero header: party name on the left, total on the right. */
+.rs-entry-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1em;
+	padding: 1em 1.25em;
+	border-bottom: 1px solid #eaecf0;
+}
+
+.rs-entry-party-block {
+	display: flex;
+	flex-direction: column;
+	gap: .15em;
+	min-width: 0;
+}
+
+.rs-entry-party-name {
+	font-size: 1.4em;
+	font-weight: 600;
+	line-height: 1.2;
+	word-break: break-word;
+}
+
+.rs-entry-total {
+	font-size: 2em;
+	font-weight: 600;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	color: #202122;
+}
+
+/* Field rows: small gray label on left, value on right. */
+.rs-entry-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1em;
+	padding: .7em 1.25em;
+	border-bottom: 1px solid #eaecf0;
+}
+
+.rs-entry-row:last-child {
+	border-bottom: none;
+}
+
+.rs-entry-label {
+	color: #54595d;
+	font-size: .95em;
+	flex: 0 0 auto;
+}
+
+.rs-entry-value {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	word-break: break-word;
+	flex: 1 1 auto;
+}
+
+/* Pill used for "company-wide" assignee and similar status-y labels. */
+.rs-entry-pill {
+	display: inline-block;
+	padding: .2em .7em;
+	border-radius: 999px;
+	background: #eaecf0;
+	color: #54595d;
+	font-size: .85em;
+}
+
+/* Supporting documents row below the card. */
+.rs-entry-supplemental {
+	flex: 1 0 100%;
+	order: 3;
+	margin-top: .5em;
+}
+
+.rs-entry-supplemental-strip {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .75em;
+	margin-top: .5em;
+}
+
+/* Narrow viewport: stack the thumb on top of the card. */
+@media ( max-width: 720px ) {
+	.rs-entry-receipt {
+		order: 0;
+		max-width: 100%;
+	}
+}

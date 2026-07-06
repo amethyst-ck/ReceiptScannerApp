@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  python-sidecar:
+    name: Python sidecar (pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sidecars/receipt-scanner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: System OCR/HEIC libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            tesseract-ocr tesseract-ocr-eng libheif1
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Run tests
+        run: pytest -q
+
+  manifest-validate:
+    name: Manifest validation (wicker)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Until the Wicker repo is public, its checkout fails with the
+      # default token; the job then skips instead of failing the build.
+      - uses: actions/checkout@v4
+        id: wicker
+        continue-on-error: true
+        with:
+          repository: amethyst-ck/Wicker
+          path: wicker-tool
+      - uses: actions/setup-python@v5
+        if: steps.wicker.outcome == 'success'
+        with:
+          python-version: '3.11'
+      - name: Install Wicker dependencies
+        if: steps.wicker.outcome == 'success'
+        run: pip install -r wicker-tool/requirements.txt
+      - name: Validate wicker.yaml
+        if: steps.wicker.outcome == 'success'
+        run: python wicker-tool/wicker.py validate .
+      - name: Note the skip
+        if: steps.wicker.outcome != 'success'
+        run: echo 'wicker checkout unavailable; validation skipped'

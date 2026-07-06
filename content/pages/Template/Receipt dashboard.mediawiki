@@ -1,0 +1,21 @@
+<noinclude>
+A six-tile entry-point grid linking to all four ReceiptScanner
+Special pages plus the two manual-entry forms. Drop it on any page
+(the wiki's Main_Page is the natural home):
+
+  {{Receipt dashboard}}
+
+The tiles are:
+
+* Upload receipt — Special:UploadReceipt
+* New expense — Special:FormEdit/Expense (manual entry, no OCR)
+* New income — Special:FormEdit/Income (manual entry, no OCR)
+* Review — Special:ReceiptReview (triage parsed entries)
+* Ledger — Special:Ledger (filter / total / CSV)
+* Unlinked files — Special:UnlinkedFiles (uploaded files not yet entered)
+
+The {{#receiptscanner_dashboard:}} parser function below renders the
+markup; styling comes from [[Template:Receipt dashboard/styles.css]]
+via TemplateStyles.
+[[Category:Receipt templates]]
+</noinclude><includeonly><templatestyles src="Template:Receipt dashboard/styles.css" />{{#receiptscanner_dashboard:}}</includeonly>

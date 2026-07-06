@@ -1,0 +1,61 @@
+<noinclude>
+This is the '''Income''' form, used to create and edit income records
+stored via [[Template:Income]]. See [[Help:Receipts]].
+
+An income entry has 0 or 1 receipt (an uploaded file the parser used to
+pre-fill these fields — typically an invoice or payment confirmation)
+and 0+ supporting documents (unparsed files such as contracts or
+correspondence). Parser pre-fills are highlighted; every field is
+editable — the user is the verification step.
+[[Category:Receipt forms]]
+</noinclude><includeonly>{{{info|page name=Income:<unique number;random;9>}}}
+{{{for template|Income}}}
+{{{field|queue_id|hidden}}}
+{| class="formtable"
+|-
+! Receipt file:
+| {{{field|file|input type=tokens|max values=1|values from namespace=File}}} {{#receiptscanner_form_actions:}}
+|-
+! Date:
+| {{{field|date|input type=date|mandatory}}}
+|-
+! Payer:
+| {{{field|payer|input type=combobox|values from cargo=table=Income,field=payer|size=40}}}
+|-
+! Total:
+| {{{field|total|input type=number}}} {{{field|currency|size=4|default={{#receiptscanner_system_currency:}}}}}
+|-
+! Exchange rate:
+| {{{field|exchange_rate|input type=number|default=1}}} <small>({{#receiptscanner_system_currency:}} per 1 of the receipt's currency — only matters when the currency differs)</small>
+|-
+! Total in {{#receiptscanner_system_currency:}}:
+| {{{field|total_system|input type=number}}}
+|-
+! Subtotal:
+| {{{field|subtotal|input type=number}}}
+|-
+! Tax:
+| {{{field|tax|input type=number}}}
+|-
+! Fees:
+| {{{field|fees|input type=number}}}
+|-
+! Payment method:
+| {{{field|payment_method|size=30}}}
+|-
+! Income category:
+| {{{field|income_category|input type=combobox|delimiter=;|values={{#receiptscanner_categories:income|;}}|size=40}}}
+|-
+! Assignee:
+| {{{field|assignee|input type=combobox|values={{#receiptscanner_users:}}|default=current user|size=30}}} <small>(blank = company-wide)</small>
+|-
+! Supporting documents:
+| {{{field|supplemental_files|input type=tokens|values from namespace=File}}}
+|-
+! Notes:
+| {{{field|notes|input type=textarea|rows=4}}}
+|}
+{{{end template}}}
+
+{{{standard input|save}}} {{{standard input|preview}}} {{{standard input|changes}}} {{{standard input|cancel}}}
+</includeonly>

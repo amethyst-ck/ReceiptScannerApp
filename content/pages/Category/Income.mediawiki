@@ -1,0 +1,12 @@
+{{#titleicon_unicode:💵}}
+Pages in this category are individual income entries created via
+[[Form:Income]] (or directly through the form-edit flow from
+[[Special:ReceiptReview]]).
+
+For totals, filtering, and CSV export across all entries, use
+[[Special:Ledger|the ledger]].
+
+The <code>{{#titleicon_unicode:}}</code> call above sets the title icon
+for every page in this category — [[Template:Income]] auto-categorizes
+income pages here. Change the emoji here to retheme all income entries
+at once. Requires the [[mw:Extension:TitleIcon|TitleIcon]] extension.

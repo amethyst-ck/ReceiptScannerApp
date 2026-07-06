@@ -1,0 +1,150 @@
+This wiki tracks money in and money out with the '''ReceiptScanner'''
+extension. Each transaction is one of two kinds, in its own namespace:
+
+* '''[[Special:CargoTables/Expenses|Expense:]]''' pages — money going out.
+* '''[[Special:CargoTables/Income|Income:]]''' pages — money coming in.
+
+== The model ==
+
+Each Expense or Income page can have:
+
+* '''0 or 1 Receipt''' — the uploaded file the parser extracted fields
+  from. An invoice, a payment confirmation, a store receipt.
+* '''0 or more Supporting documents''' — extra files that justify or
+  contextualize the transaction (a contract, a boarding pass, a
+  warranty card, a statement). Supporting documents are ''not'' parsed
+  and can be linked from multiple Expense or Income pages.
+
+A transaction with no Receipt is a '''manual entry''' (cash purchase,
+recalled-from-memory expense, transfer with no document).
+
+== Adding a transaction ==
+
+=== From uploads (the usual flow) ===
+
+# Go to [[Special:UploadReceipt]].
+# Pick '''Expense''' or '''Income''' (the radio at the top of the page).
+  All files in this upload will get that kind; you can change it per
+  entry later.
+# Click '''Choose files…''' and select one or more files (PDF, JPEG,
+  PNG, HEIC). The button text updates to show how many you picked.
+# Click '''Upload and queue'''. Each file is queued and OCR'd in the
+  background — usually ready within a few seconds.
+# You land on [[Special:ReceiptReview]], which auto-refreshes every
+  10 seconds while there's pending work. When entries land in the
+  '''Ready''' section, click '''Review in form''' on each. The form
+  ([[Form:Expense]] or [[Form:Income]]) opens with the parsed fields
+  pre-filled.
+# Verify, correct anything the parser got wrong, and save.
+
+'''Every parsed field is a starting point.''' You are always the
+verification step — nothing is saved until you review it.
+
+=== Manually (no receipt) ===
+
+Open [[Form:Expense]] or [[Form:Income]] directly. Leave the receipt
+file field blank.
+
+=== From an already-uploaded file ===
+
+If a file was uploaded to the wiki but never attached to an entry, it
+shows up on [[Special:UnlinkedFiles]]. Each unlinked file has
+'''Process as Expense''' / '''Process as Income''' buttons that queue
+it for OCR just like a fresh upload. Users allowed to delete also see
+a '''Delete file''' button for mis-uploads; it goes through
+MediaWiki's standard delete confirmation, and admins can undo it via
+[[Special:Undelete]].
+
+== If you picked the wrong kind ==
+
+On [[Special:ReceiptReview]], a Ready row has a '''Toggle type''' button
+alongside ''Review in form'' / ''Reprocess'' / ''Dismiss''. Click it to
+flip Expense ↔ Income; the row is reprocessed so the parser swaps
+''payee'' ↔ ''payer'' and re-extracts.
+
+== Re-running the parser ==
+
+Reprocessing only happens '''before''' you first approve a row. On
+[[Special:ReceiptReview]], a Ready row's '''Reprocess''' button (or a
+Failed row's '''Retry''' button) resets it to Pending and re-runs the
+parser; once it lands
+back in Ready, '''Review in form''' returns you to the same entry with
+fresh parsed fields.
+
+Once an entry is saved, its wikitext fields are the source of truth, so
+there is deliberately no reprocess button on a saved entry. To correct a
+saved entry, edit it directly (form or wikitext). To start over from the
+same receipt file, use the '''Clone''' button on the entry, which creates
+a fresh row from that file.
+
+== Categories ==
+
+Each transaction gets one category, chosen from a per-kind vocabulary:
+[[Project:Expense categories]] for expenses, [[Project:Income categories]]
+for income. Categories are hierarchical paths like <code>Travel/Meals</code>
+or <code>Sales/Products</code>. Roll-up reporting uses the path prefix
+— a query for <code>Travel/%</code> covers every travel subcategory.
+
+If a single purchase spans categories, split it into multiple Expense
+records that reference the same Receipt file.
+
+=== If the vocabulary changes ===
+
+Renaming or removing a category does not rewrite existing pages — they
+keep the path they were saved with. To find entries on a category that
+is no longer listed on [[Project:Expense categories]] or
+[[Project:Income categories]], filter [[Special:Ledger]] by that category
+prefix (or run a Cargo query), then fix each entry by hand.
+
+== Assignment ==
+
+* '''Assignee''' is set automatically to whoever is logged in when the
+  entry is first created; reassign during review by picking a different
+  user from the autocomplete.
+* A blank assignee means the transaction is company-wide.
+
+== Reporting ==
+
+[[Special:Ledger]] is the combined view across Expenses and Income:
+
+* Filter by kind (Both / Expense / Income).
+* Filter by date range — presets for ''this/last week|month|year'', plus
+  ''Custom range'' for explicit dates.
+* Filter by amount (min/max), category prefix, or uncategorized-only.
+* Filter by assignee (exact username), payee/payer substring, or
+  notes substring.
+* Table with totals (expenses, income, net) above.
+* '''Export CSV''' downloads the current filtered set with the date
+  range pinned as absolute dates, so the file stays stable later.
+
+== Per-user pages ==
+
+Each user can have their own receipts summary on their User: page using
+the <code><nowiki>{{User receipts}}</nowiki></code> template:
+
+* On your own user page (e.g. <code>User:Alice</code>), just add
+  <code><nowiki>{{User receipts}}</nowiki></code>. The template
+  defaults the username to the page name.
+* On someone else's user page, pass the name explicitly:
+  <code><nowiki>{{User receipts|Alice}}</nowiki></code>.
+
+The template renders the user's 20 most recent expenses and income
+entries from Cargo, with links to the full filtered view in
+[[Special:Ledger]].
+
+This app preconfigures new user pages to transclude
+<code><nowiki>{{User receipts}}</nowiki></code> on first login, via the
+[https://www.mediawiki.org/wiki/Extension:CreateUserPage CreateUserPage]
+extension. To change what new user pages contain, set
+<code>$wgCreateUserPage_PageContent</code> in a settings override.
+
+== Quick links ==
+
+* [[Special:UploadReceipt]] — bulk upload + queue
+* [[Special:ReceiptReview]] — triage Ready / Pending / Processing / Failed
+* [[Special:UnlinkedFiles]] — files on the wiki not attached to any entry
+* [[Special:Ledger]] — combined report + CSV (filterable by kind, date,
+  amount, category, assignee)
+* [[Project:Expense categories]] / [[Project:Income categories]] — taxonomy
+
+[[Category:Help]]

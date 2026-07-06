@@ -1,0 +1,8 @@
+<noinclude>
+One row of the expense table rendered by [[Template:User receipts]] via
+<code>{{#cargo_query:|format=template|template=User receipts row expense|named args=yes}}</code>.
+Each call receives `page` (Cargo `_pageName`), `date`, `payee`, `total`,
+`currency`, `category`. Uses HTML <tr>/<td> tags so Cargo's
+single-line-concatenated output still parses as a table row.
+[[Category:Receipt templates]]
+</noinclude><includeonly><tr><td data-label="Date">{{{date|}}}</td><td data-label="Payee">{{{payee|}}}</td><td style="text-align:right" data-label="Total">{{#receiptscanner_format_amount:{{{total|}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}</td><td data-label="Category">{{{category|}}}</td><td style="text-align:center" class="rs-ur-link">[[{{{page}}}|🔗]]</td></tr></includeonly>

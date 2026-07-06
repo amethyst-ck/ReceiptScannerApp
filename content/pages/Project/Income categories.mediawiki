@@ -1,0 +1,39 @@
+This page defines the '''income category vocabulary''' as an
+indented bullet list. The ReceiptScanner extension parses it on save,
+flattens it into full paths (<code>Sales/Products</code>,
+<code>Consulting/Retainers</code>, …), and uses it to autocomplete the
+<code>income_category</code> field on [[Form:Income]].
+
+Expenses have their own vocabulary at [[Project:Expense categories]].
+
+Edit this list with normal wiki editing to change the taxonomy. Existing
+income entries keep whatever path they were saved with; see
+[[Help:Receipts]] for how drift is handled.
+
+'''Reserved characters in labels:''' <code>/</code> separates parent
+from child in the rendered path, and <code>;</code> separates the
+options when this list is fed to the form combobox. Don't use either
+inside a label. Commas are fine. Where you'd be tempted to write
+<code>A/B</code> in a single label, write "A, B, and …" instead, or
+split into a real parent → child relationship.
+
+This starter tree is a sensible default for a small business. Replace it
+with your own.
+
+* Sales
+** Products
+** Services
+* Consulting
+** Hourly
+** Retainers
+** Contracts
+* Subscriptions
+* Sponsorships
+* Royalties
+* Interest
+* Dividends
+* Rental Income
+* Grants
+* Refunds and Rebates
+* Sale of Assets
+* Other

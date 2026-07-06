@@ -1,0 +1,113 @@
+# Wicker application manifest for ReceiptScanner.
+# Deploy with: wicker deploy . -i rsdev -n localhost
+apiVersion: wicker-app/v1
+name: receipt-scanner
+version: 1.0.0
+description: OCR-driven receipt entry as a Canasta-based wiki application
+author: Cindy Cicalese
+homepage: https://github.com/amethyst-ck/ReceiptScannerApp
+license: GPL-2.0-or-later
+
+requires:
+  canasta: ">=3.5"
+
+# The wikis in this instance (required). The first entry is the primary wiki:
+# its id names the instance. siteName is the display name ($wgSitename);
+# without it the name defaults to the id. The domain is not set here — it is
+# passed at deploy time via `-n/--domain-name` (e.g. `-n localhost`).
+wikis:
+  - id: main
+    siteName: Receipt Scanner
+
+# Bundled extensions (name only) are loaded by the settings fragment below;
+# custom extensions (source/git) are installed by Wicker.
+extensions:
+  - name: Cargo
+  - name: CreateUserPage
+  - name: DisplayTitle
+  - name: PageForms
+  - name: ParserFunctions
+  - name: PdfHandler
+  - name: TemplateStyles
+  - name: TitleIcon
+  - name: ReceiptScanner
+    git: https://github.com/amethyst-ck/ReceiptScanner
+    ref: v1.0.0
+
+# Derived web image — raises PHP max_file_uploads (the one upload limit
+# Canasta has no .env knob for) so bulk uploads aren't capped at 20.
+images:
+  web:
+    dockerfile: ./images/web/Dockerfile
+    context: ./images/web
+    tag: canasta-web-receiptscanner:local
+
+# HMAC secret shared by the wiki and the sidecar to sign requests to each
+# other. Declared once and routed to both tiers (Wicker references it in the
+# sidecar's env and re-exports it to the wiki's getenv()). Its value comes from
+# the RECEIPT_SCANNER_SHARED_SECRET deploy environment variable, or
+# `--secret RECEIPT_SCANNER_SHARED_SECRET=...`; leave it unset to disable
+# request signing. On k8s the value is sourced from a per-instance Secret via
+# secretKeyRef (never in the gitops repo); on Compose it rides the gitignored
+# .env.
+secrets:
+  - name: RECEIPT_SCANNER_SHARED_SECRET
+    description: HMAC key shared by the wiki and the receipt-scanner sidecar.
+    required: false
+    target: [web, sidecar:receipt-scanner]
+
+sidecars:
+  - name: receipt-scanner
+    build: ./sidecars/receipt-scanner
+    ports: [8000]
+    healthcheck:
+      path: /health
+      port: 8000
+
+settings:
+  - path: ./settings/Settings.php
+    install: config/settings/global/Settings.php
+
+# Static files copied verbatim into the instance's public_assets/ (served by
+# the web tier). The wiki logo is referenced from Settings.php.
+publicAssets: ./public_assets
+
+content:
+  # Each page's file path mirrors its title under content/pages/ (the
+  # namespace is a directory): Template:Expense -> Template/Expense.mediawiki.
+  pages:
+    dir: ./content/pages
+    list:
+      - Template:Expense
+      - Template:Income
+      - Form:Expense
+      - Form:Income
+      - Project:Expense categories
+      - Project:Income categories
+      - Template:User receipts
+      - Template:Receipt dashboard
+      - Template:Receipt dashboard/styles.css
+      - Template:Receipt entry/styles.css
+      - Category:Expenses
+      - Category:Help
+      - Category:Income
+      - Category:Receipt forms
+      - Category:Receipt templates
+      - Help:Receipts
+      - Main Page
+      - Template:User receipts row expense
+      - Template:User receipts row income
+      - Template:User receipts/styles.css
+      - MediaWiki:Pf formedit edittitle
+  postInstall:
+    # Cargo tables aren't created until the templates are reparsed under
+    # cargoRecreateData. postInstall stays dumb — it just invokes the
+    # extension's maintenance script.
+    - kind: maintenance
+      extension: Cargo
+      script: cargoRecreateData.php
+      args: ["--table=Expenses"]
+    - kind: maintenance
+      extension: Cargo
+      script: cargoRecreateData.php
+      args: ["--table=Income"]

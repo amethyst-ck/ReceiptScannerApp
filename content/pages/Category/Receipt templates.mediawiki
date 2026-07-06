@@ -1,0 +1,3 @@
+Pages in this category are the templates shipped with the
+ReceiptScanner starter content — entry storage, per-user summaries,
+and the dashboard.

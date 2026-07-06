@@ -1,0 +1,79 @@
+/* Styling for the user-page expense / income tables rendered by
+   {{User receipts}}. Mirrors .rs-ledger-table from Special:Ledger so the
+   per-user summary visually echoes the global ledger. Loaded via
+   <templatestyles src="Template:User receipts/styles.css" /> in the
+   parent template — no PHP hook needed. */
+
+table.rs-ledger-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: var( --background-color-base, #fff );
+	border: 1px solid var( --border-color-subtle, #eaecf0 );
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+table.rs-ledger-table th,
+table.rs-ledger-table td {
+	padding: .5em .8em;
+	border-bottom: 1px solid var( --border-color-subtle, #eaecf0 );
+	text-align: left;
+}
+
+table.rs-ledger-table tr:last-child td {
+	border-bottom: none;
+}
+
+table.rs-ledger-table th {
+	background: var( --background-color-neutral-subtle, #f8f9fa );
+	font-weight: 600;
+}
+
+/* Narrow viewports: same stacked-card reflow as Special:Ledger. This
+ * table has no thead — the header cells live in the first row — and
+ * the data-label values are hardcoded to match the intro= headers in
+ * Template:User receipts. */
+@media ( max-width: 720px ) {
+	table.rs-ledger-table tr:first-child {
+		display: none;
+	}
+
+	table.rs-ledger-table,
+	table.rs-ledger-table tbody,
+	table.rs-ledger-table tr,
+	table.rs-ledger-table td {
+		display: block;
+	}
+
+	table.rs-ledger-table tr {
+		position: relative;
+		padding: .6em .8em;
+		border-bottom: 1px solid var( --border-color-subtle, #eaecf0 );
+	}
+
+	table.rs-ledger-table td {
+		padding: .1em 0;
+		border-bottom: none;
+		text-align: left !important;
+	}
+
+	table.rs-ledger-table td:empty {
+		display: none;
+	}
+
+	table.rs-ledger-table td[data-label]::before {
+		content: attr( data-label );
+		display: inline-block;
+		width: 7em;
+		color: var( --color-subtle, #54595d );
+		font-size: .85em;
+	}
+
+	table.rs-ledger-table td.rs-ur-link {
+		position: absolute;
+		top: .7em;
+		right: .8em;
+		width: auto;
+		padding: 0;
+	}
+}

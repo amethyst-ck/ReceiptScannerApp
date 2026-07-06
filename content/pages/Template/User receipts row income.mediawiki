@@ -1,0 +1,8 @@
+<noinclude>
+One row of the income table rendered by [[Template:User receipts]] via
+<code>{{#cargo_query:|format=template|template=User receipts row income|named args=yes}}</code>.
+Each call receives `page` (Cargo `_pageName`), `date`, `payer`, `total`,
+`currency`, `category`. HTML <tr>/<td> — see
+[[Template:User receipts row expense]].
+[[Category:Receipt templates]]
+</noinclude><includeonly><tr><td data-label="Date">{{{date|}}}</td><td data-label="Payer">{{{payer|}}}</td><td style="text-align:right" data-label="Total">{{#receiptscanner_format_amount:{{{total|}}}|{{{currency|{{#receiptscanner_system_currency:}}}}}}}</td><td data-label="Category">{{{category|}}}</td><td style="text-align:center" class="rs-ur-link">[[{{{page}}}|🔗]]</td></tr></includeonly>
